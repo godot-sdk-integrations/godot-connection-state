@@ -11,7 +11,7 @@
 A Godot plugin that provides a unified GDScript interface for getting information on mobile device connections on **Android** and **iOS**.
 
 **Key Features:**
-- Get information about all available connections on mobile device
+- Get information about all available connections on a mobile device
 - Know when a new connection is established (signal)
 - Know when a connection is lost (signal)
 
@@ -68,13 +68,34 @@ Steps:
 
 
 ## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="20"> Usage
-- Add `ConnectionState` node to your main scene or an autoload global scene.
+Add `ConnectionState` node to your main scene or an autoload global scene.
 
-### <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="18"> Loading and displaying ads
 - use the `ConnectionState` node's `get_connection_state()` method to get information on all available connections
 - connect `ConnectionState` node signals
 	- `connection_established(a_connection_info: ConnectionInfo)`
 	- `connection_lost(a_connection_info: ConnectionInfo)`
+
+Example usage:
+```
+@onready var connection_state := $ConnectionState
+
+func _ready():
+	connection_state.connection_established.connect(_on_connection_established)
+	connection_state.connection_lost.connect(_on_connection_lost)
+
+	var connections: Array[ConnectionInfo] = connection_state.get_connection_state()
+	for info in connections:
+		print("Connection type: %s -- is_active: %s -- is_metered: %s" % [
+				ConnectionInfo.ConnectionType.keys()[info.get_connection_type()],
+				str(info.is_active()),
+				str(info.is_metered())])
+
+func _on_connection_established(info: ConnectionInfo):
+	print("Connection established:", info.connection_type)
+
+func _on_connection_lost(info: ConnectionInfo):
+	print("Connection lost:", info.connection_type)
+```
 
 ---
 
@@ -90,7 +111,7 @@ Steps:
 <a name="methods"></a>
 
 ## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="20"> Methods
-- `get_connection_state()` - retuns an array of `ConnectionInfo` objects
+- `get_connection_state() -> Array[ConnectionInfo]` - returns an array of `ConnectionInfo` objects
 
 ---
 
@@ -99,8 +120,11 @@ Steps:
 ## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="20"> Classes
 
 ### <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="16"> ConnectionInfo
-- Encapsulates adapter response data that is returned by the SDK for an ad request.
-- Properties: `connection_type`, `is_active`, `is_metered`
+- Encapsulates network connection data that is provided by the mobile OS.
+- Properties:
+	- `connection_type`: type of network connection: WIFI, Cellular, Ethernet, Bluetooth, VPN, Loopback, or Unknown
+	- `is_active`: whether the connection is actively being used
+	- `is_metered`: whether the connection has a data limit that tracks usage
 
 ---
 
@@ -129,8 +153,8 @@ Steps:
 
 # <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-connection-state/main/addon/icon.png" width="24"> Links
 
-- [AssetLib Entry Android](https://godotengine.org/asset-library/asset/2548)
-- [AssetLib Entry iOS](https://godotengine.org/asset-library/asset/3178)
+- [AssetLib Entry Android](https://godotengine.org/asset-library/asset/4582)
+- [AssetLib Entry iOS](https://godotengine.org/asset-library/asset/4581)
 
 ---
 
@@ -139,11 +163,12 @@ Steps:
 | Plugin | Android | iOS | Free | Open Source | License |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | [Notification Scheduler](https://github.com/godot-sdk-integrations/godot-notification-scheduler) | ✅ | ✅ | ✅ | ✅ | MIT |
-| [Admob](https://github.com/godot-sdk-integrations/godot-connection-state) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [Admob](https://github.com/godot-sdk-integrations/godot-admob) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [Deeplink](https://github.com/godot-sdk-integrations/godot-deeplink) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [Share](https://github.com/godot-sdk-integrations/godot-share) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [In-App Review](https://github.com/godot-sdk-integrations/godot-inapp-review) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [Connection State](https://github.com/godot-sdk-integrations/godot-connection-state) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [OAuth 2.0](https://github.com/godot-sdk-integrations/godot-oauth2) | ✅ | ✅ | ✅ | ✅ | MIT |
 
 ---
 
